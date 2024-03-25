@@ -175,8 +175,7 @@ in {
     # other history managers, like mcfly or atuin, take precedence.
     programs.bash.initExtra = mkIf cfg.enableBashIntegration (mkOrder 200 ''
       if [[ :$SHELLOPTS: =~ :(vi|emacs): ]]; then
-        . ${cfg.package}/share/fzf/completion.bash
-        . ${cfg.package}/share/fzf/key-bindings.bash
+        eval "$(${getExe pkgs.fzf} --bash)"
       fi
     '');
 
@@ -185,14 +184,13 @@ in {
     # other history managers, like mcfly or atuin, take precedence.
     programs.zsh.initExtra = mkIf cfg.enableZshIntegration (mkOrder 200 ''
       if [[ $options[zle] = on ]]; then
-        . ${cfg.package}/share/fzf/completion.zsh
-        . ${cfg.package}/share/fzf/key-bindings.zsh
+        eval "$(${getExe pkgs.fzf} --zsh)"
       fi
     '');
 
     programs.fish.interactiveShellInit = mkIf cfg.enableFishIntegration
       (mkOrder 200 ''
-        source ${cfg.package}/share/fzf/key-bindings.fish && fzf_key_bindings
+        eval "$(${getExe pkgs.fzf} --fish | source)"
       '');
   };
 }
